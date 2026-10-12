@@ -142,6 +142,12 @@ export default function Page() {
         </div>
         <div className="flap" />
         <div className="body" />
+        <img
+          src="/estampilla.png"
+          alt="Estampilla postal CFI"
+          className="stamp"
+          draggable={false}
+        />
         {!abierto ? (
           <p className="hint">Tocá para abrir</p>
         ) : (

@@ -114,6 +114,27 @@ body {
   outline-offset: 2px;
 }
 
+/* Estampilla postal pegada al sobre */
+.stamp {
+  position: absolute;
+  bottom: 16px;
+  right: 18px;
+  width: min(20vw, 70px);
+  aspect-ratio: 432 / 582;
+  object-fit: contain;
+  z-index: 4;
+  filter: drop-shadow(0 4px 10px rgba(50, 25, 10, 0.28));
+  transform: rotate(3deg);
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-select: none;
+  transition: transform 0.3s ease;
+}
+
+.envelope:hover .stamp {
+  transform: rotate(1deg) scale(1.04);
+}
+
 .hint {
   position: absolute;
   left: 0;
@@ -487,12 +508,23 @@ button.hint-open:focus-visible {
   .celebration-grade {
     font-size: 20px;
   }
+
+  .stamp {
+    bottom: 12px;
+    right: 14px;
+    width: min(20vw, 58px);
+  }
 }
 
 @media (max-width: 380px) {
   .hint { font-size: 16px; }
   .celebration-title { font-size: 17px; }
   .celebration-highlight { font-size: 12.5px; }
+  .stamp {
+    bottom: 10px;
+    right: 10px;
+    width: 48px;
+  }
 }
 
 @media (hover: none) {
