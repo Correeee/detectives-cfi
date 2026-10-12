@@ -1,13 +1,4 @@
 /** @type {import('next').NextConfig} */
-const isProd = process.env.NODE_ENV === 'production';
-
-const nextConfig = {
-  output: 'export',
-  basePath: isProd ? '/detectives-cfi' : '',
-  images: {
-    unoptimized: true,
-  },
-  trailingSlash: true,
-};
+const nextConfig = {};
 
 export default nextConfig;

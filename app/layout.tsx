@@ -1,9 +1,7 @@
 import type { Metadata, Viewport } from 'next';
 import './envelope.css';
 
-const siteUrl = 'https://correeee.github.io/detectives-cfi';
-const isProd = process.env.NODE_ENV === 'production';
-const basePath = isProd ? '/detectives-cfi' : '';
+const siteUrl = 'https://detectives-cfi.vercel.app';
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
@@ -87,8 +85,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="es">
       <head>
-        <link rel="icon" href={`${basePath}/estampilla.png`} type="image/png" />
-        <link rel="apple-touch-icon" href={`${basePath}/estampilla.png`} />
+        <link rel="icon" href="/estampilla.png" type="image/png" />
+        <link rel="apple-touch-icon" href="/estampilla.png" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link

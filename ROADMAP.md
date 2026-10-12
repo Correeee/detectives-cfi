@@ -2,7 +2,7 @@
 
 ## 📋 Estado General del MVP
 - Progreso Estimado: 100%
-- Objetivo: Experiencia interactiva para las familias de los alumnos de 5.º B con apertura de sobre animada, revelación de foto grupal, música de fondo, mensaje festivo de "Caso Resuelto" y despliegue automático en GitHub Pages.
+- Objetivo: Experiencia interactiva para las familias de los alumnos de 5.º B con apertura de sobre animada, revelación de foto grupal, música de fondo, mensaje festivo de "Caso Resuelto" y despliegue nativo en Vercel.
 
 ## 🚧 En Progreso / Siguiente
 - [ ] Opciones adicionales de descarga o compartir tarjeta si las familias lo solicitan.
@@ -20,6 +20,6 @@
 - [x] Música de fondo interactiva (`background.mp3`) con control flotante para pausar/reanudar.
 - [x] Logo del colegio en cabecera de la página, en el informe de detectives y favicon de pestaña.
 - [x] Optimización SEO completa: Open Graph, Twitter Cards, Schema.org estructurado, metadatos descriptivos y tags semánticos.
-- [x] Configuración para despliegue en GitHub Pages: `output: 'export'`, `basePath: '/detectives-cfi'`, archivo `.nojekyll` y workflow oficial de GitHub Actions (`deploy.yml`).
+- [x] Configuración optimizada para Vercel: rutas nativas en la raíz (`/`), metadatos hacia `detectives-cfi.vercel.app` y eliminación del prefijo de subdirectorio.
 
-*Última actualización: 12 de Octubre de 2026 (SEO completo, logo escolar, botón diferido post-modal y soporte para GitHub Pages)*
+*Última actualización: 12 de Octubre de 2026 (Adaptación y corrección completa para despliegue en Vercel)*
