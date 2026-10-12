@@ -30,7 +30,84 @@ body {
   min-height: 100dvh;
   display: grid;
   place-items: center;
-  padding: max(24px, env(safe-area-inset-top)) 20px max(40px, env(safe-area-inset-bottom));
+  padding: max(70px, calc(env(safe-area-inset-top) + 60px)) 20px max(40px, env(safe-area-inset-bottom));
+  position: relative;
+}
+
+/* Cabecera y marca del colegio */
+.page-header {
+  position: absolute;
+  top: max(16px, env(safe-area-inset-top));
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  pointer-events: none;
+}
+
+.brand-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  padding: 6px 16px 6px 10px;
+  border-radius: 999px;
+  border: 1.5px solid #edd5be;
+  box-shadow: 0 4px 14px rgba(90, 50, 20, 0.12);
+}
+
+.brand-logo {
+  width: 26px;
+  height: auto;
+  aspect-ratio: 432 / 582;
+  object-fit: contain;
+  filter: drop-shadow(0 2px 4px rgba(50, 25, 10, 0.18));
+}
+
+.brand-text {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+  line-height: 1.15;
+}
+
+.brand-school {
+  font-family: var(--font-fun);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.brand-sub {
+  font-family: var(--font-fun);
+  font-size: 11px;
+  font-weight: 600;
+  color: #a8581e;
+  letter-spacing: 0.5px;
+}
+
+.badge-case-logo {
+  width: 18px;
+  height: auto;
+  aspect-ratio: 432 / 582;
+  object-fit: contain;
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.15));
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
 }
 
 /* ---------- Sobre ---------- */

@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
+import { getAssetPath } from '../app/basePath';
 
 type Props = {
   src: string;
@@ -69,9 +70,8 @@ export default function Lightbox({ src, alt, onClose }: Props) {
 
         <div className="celebration-side">
           <div className="celebration-badge-case">
-            🕵️‍♂️ INFORME DE LOS DETECTIVES
+            <span>INFORME DE LOS DETECTIVES · 5.º B</span>
           </div>
-
           <h2 className="celebration-title">
             🎉 ¡CASO RESUELTO! 🎉
           </h2>

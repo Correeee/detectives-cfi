@@ -3,16 +3,19 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import type { KeyboardEvent as ReactKeyboardEvent } from 'react';
 import Lightbox from '../components/Lightbox';
-
-// Foto grupal de los detectives (ubicada en /public/foto.jpg)
-const FOTO = { src: '/foto.jpg', alt: 'Foto de los detectives' };
+import { getAssetPath } from './basePath';
 
 export default function Page() {
   const [abierto, setAbierto] = useState(false);
   const [ampliada, setAmpliada] = useState(false);
+  const [yaAbrioModal, setYaAbrioModal] = useState(false);
   const [sonando, setSonando] = useState(false);
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+
+  const fotoSrc = getAssetPath('/foto.jpg');
+  const estampillaSrc = getAssetPath('/estampilla.png');
+  const audioSrc = getAssetPath('/background.mp3');
 
   const iniciarAudio = useCallback(() => {
     if (audioRef.current) {
@@ -32,7 +35,7 @@ export default function Page() {
       audioRef.current
         .play()
         .then(() => setSonando(true))
-        .catch(() => {});
+        .catch(() => { });
     } else {
       audioRef.current.pause();
       setSonando(false);
@@ -59,6 +62,7 @@ export default function Page() {
       timerRef.current = null;
     }
     setAmpliada(true);
+    setYaAbrioModal(true);
   }, []);
 
   // Al abrir el sobre, espera a que termine de salir la foto (~1.7s) y abre el lightbox automáticamente
@@ -67,6 +71,7 @@ export default function Page() {
 
     timerRef.current = setTimeout(() => {
       setAmpliada(true);
+      setYaAbrioModal(true);
     }, 1800);
 
     return () => {
@@ -96,8 +101,29 @@ export default function Page() {
 
   return (
     <main className="stage">
-      <audio ref={audioRef} src="/background.mp3" preload="auto" loop />
+      <audio ref={audioRef} src={audioSrc} preload="auto" loop />
 
+      {/* Cabecera con logo del colegio y título semántico SEO */}
+      <header className="page-header" id="page-header">
+        {/*<div className="brand-pill">
+          <img
+            src={estampillaSrc}
+            alt="Logo Centro de Formación Integral"
+            className="brand-logo"
+            width={28}
+            height={38}
+          />
+          <div className="brand-text">
+            <span className="brand-school">Centro de Formación Integral</span>
+            <span className="brand-sub">Misión Detectives · 5.º B</span>
+          </div>
+        </div>*/}
+        <h1 className="sr-only">
+          ¡Caso Resuelto! Los detectives de 5.º B del Centro de Formación Integral
+        </h1>
+      </header>
+
+      {/* Control flotante de música */}
       {abierto && (
         <button
           type="button"
@@ -110,6 +136,7 @@ export default function Page() {
         </button>
       )}
 
+      {/* Sobre interactivo */}
       <div
         className={`envelope ${abierto ? 'is-open' : ''}`}
         role="button"
@@ -138,19 +165,21 @@ export default function Page() {
             if (abierto) onFotoKey(e);
           }}
         >
-          <img src={FOTO.src} alt={FOTO.alt} draggable={false} />
+          <img src={fotoSrc} alt="Foto de los detectives" draggable={false} />
         </div>
         <div className="flap" />
         <div className="body" />
         <img
-          src="/estampilla.png"
+          src={estampillaSrc}
           alt="Estampilla postal CFI"
           className="stamp"
           draggable={false}
         />
+
+        {/* Solo muestra botón de abrir al inicio, y el botón de ver mensaje SOLO tras haber abierto el modal al menos una vez */}
         {!abierto ? (
           <p className="hint">Tocá para abrir</p>
-        ) : (
+        ) : yaAbrioModal && !ampliada ? (
           <button
             type="button"
             className="hint hint-open"
@@ -161,11 +190,11 @@ export default function Page() {
           >
             🔍 Tocá para ver el mensaje
           </button>
-        )}
+        ) : null}
       </div>
 
       {ampliada && (
-        <Lightbox src={FOTO.src} alt={FOTO.alt} onClose={cerrarAmpliada} />
+        <Lightbox src={fotoSrc} alt="Foto de los detectives" onClose={cerrarAmpliada} />
       )}
     </main>
   );
