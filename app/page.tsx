@@ -15,6 +15,10 @@ export default function Page() {
   const [sonando, setSonando] = useState(false);
   const [compartiendo, setCompartiendo] = useState(false);
   const [aviso, setAviso] = useState('');
+  // Pantalla de carga: precarga los assets visuales antes de mostrar el sobre
+  const [cargando, setCargando] = useState(true);
+  const [saliendo, setSaliendo] = useState(false);
+  const [progreso, setProgreso] = useState(0);
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const stageRef = useRef<HTMLElement | null>(null);
@@ -24,20 +28,80 @@ export default function Page() {
   // "Compartir" el archivo ya esté listo (sin perder el gesto del usuario).
   const tarjetaRef = useRef<Blob | null>(null);
   const tarjetaPromesaRef = useRef<Promise<Blob> | null>(null);
+  // Indica si el audio ya fue solicitado (carga diferida)
+  const audioSolicitadoRef = useRef(false);
 
   const fotoSrc = getAssetPath('/foto.jpg');
   const estampillaSrc = getAssetPath('/estampilla.png');
   const audioSrc = getAssetPath('/background.mp3');
+  const fondoSrc = getAssetPath('/background.webp');
+
+  // Precarga los assets visuales para que todo aparezca listo de una sola vez
+  useEffect(() => {
+    const fuentes = [fotoSrc, estampillaSrc, fondoSrc];
+    let cargados = 0;
+    let cancelado = false;
+
+    const avanzar = () => {
+      if (cancelado) return;
+      cargados += 1;
+      setProgreso(Math.round((cargados / fuentes.length) * 100));
+
+      if (cargados >= fuentes.length) {
+        window.setTimeout(() => {
+          if (!cancelado) setSaliendo(true);
+        }, 250);
+        window.setTimeout(() => {
+          if (!cancelado) setCargando(false);
+        }, 650);
+      }
+    };
+
+    fuentes.forEach((src) => {
+      let hecho = false;
+      const fin = () => {
+        if (hecho) return;
+        hecho = true;
+        avanzar();
+      };
+      const img = new Image();
+      img.onload = fin;
+      img.onerror = fin; // si algo falla, no bloqueamos la experiencia
+      img.src = src;
+      if (img.complete) fin();
+    });
+
+    // Red de seguridad: nunca dejar la pantalla de carga más de 12s
+    const seguridad = window.setTimeout(() => {
+      if (!cancelado) {
+        setProgreso(100);
+        setSaliendo(true);
+        setCargando(false);
+      }
+    }, 12000);
+
+    return () => {
+      cancelado = true;
+      window.clearTimeout(seguridad);
+    };
+  }, [fotoSrc, estampillaSrc, fondoSrc]);
 
   const iniciarAudio = useCallback(() => {
-    if (audioRef.current) {
-      audioRef.current
-        .play()
-        .then(() => setSonando(true))
-        .catch(() => {
-          /* el navegador puede bloquear el audio hasta el primer gesto */
-        });
+    const audio = audioRef.current;
+    if (!audio) return;
+
+    // Carga diferida: el MP3 se descarga recién al abrir el sobre
+    if (!audioSolicitadoRef.current) {
+      audioSolicitadoRef.current = true;
+      audio.load();
     }
+
+    audio
+      .play()
+      .then(() => setSonando(true))
+      .catch(() => {
+        /* el navegador puede bloquear el audio hasta el primer gesto */
+      });
   }, []);
 
   const toggleSonido = useCallback((e: React.MouseEvent) => {
@@ -270,8 +334,30 @@ export default function Page() {
   };
 
   return (
-    <main className="stage" ref={stageRef}>
-      <audio ref={audioRef} src={audioSrc} preload="auto" loop />
+    <main className={`stage ${cargando ? '' : 'is-ready'}`} ref={stageRef}>
+      {/* Audio en carga diferida: el MP3 se descarga recién al abrir el sobre */}
+      <audio ref={audioRef} src={audioSrc} preload="none" loop />
+
+      {/* Pantalla de carga con barra de progreso */}
+      {cargando && (
+        <div
+          className={`loading-screen ${saliendo ? 'is-hiding' : ''}`}
+          role="status"
+          aria-live="polite"
+          aria-label="Preparando el caso"
+        >
+          <div className="loading-inner">
+            <span className="loading-stamp" aria-hidden="true">
+              🔎
+            </span>
+            <p className="loading-title">Preparando el caso…</p>
+            <div className="loading-bar" aria-hidden="true">
+              <div className="loading-bar-fill" style={{ width: `${progreso}%` }} />
+            </div>
+            <p className="loading-percent">{progreso}%</p>
+          </div>
+        </div>
+      )}
 
       {/* Ráfaga de confetti al abrir el sobre */}
       <Confetti className="stage-confetti" pieces={20} />

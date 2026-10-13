@@ -129,6 +129,91 @@ body {
   border-width: 0;
 }
 
+/* ---------- Pantalla de carga ---------- */
+.loading-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: grid;
+  place-items: center;
+  background-color: #f6ecd9;
+  background-image:
+    radial-gradient(circle at 50% 28%, rgba(255, 248, 238, 0.85), rgba(242, 217, 194, 0.95)),
+    url('/background.webp');
+  background-repeat: no-repeat, repeat;
+  background-size: cover, 520px auto;
+  background-position: center top, top left;
+  transition: opacity 0.4s ease, visibility 0s linear 0.4s;
+}
+
+.loading-screen.is-hiding {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.loading-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  padding: 24px;
+  text-align: center;
+}
+
+.loading-stamp {
+  font-size: 46px;
+  line-height: 1;
+  animation: loading-pulse 1.4s ease-in-out infinite;
+}
+
+.loading-title {
+  margin: 0;
+  font-family: var(--font-fun);
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--ink);
+  letter-spacing: 0.5px;
+}
+
+.loading-bar {
+  width: min(70vw, 260px);
+  height: 12px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.7);
+  border: 2px solid #e3c8a6;
+  overflow: hidden;
+  box-shadow: inset 0 1px 3px rgba(90, 50, 20, 0.12);
+}
+
+.loading-bar-fill {
+  height: 100%;
+  width: 0;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #e8590c, #c92a2a);
+  transition: width 0.3s ease;
+}
+
+.loading-percent {
+  margin: 0;
+  font-family: var(--font-fun);
+  font-size: 14px;
+  font-weight: 600;
+  color: #a8581e;
+}
+
+@keyframes loading-pulse {
+
+  0%,
+  100% {
+    transform: scale(1) rotate(-8deg);
+  }
+
+  50% {
+    transform: scale(1.15) rotate(8deg);
+  }
+}
+
 /* ---------- Sobre ---------- */
 
 .envelope {
@@ -148,8 +233,8 @@ body {
   border-radius: 8px;
 }
 
-/* Sacudida del sobre cerrado: arranca al instante y se repite en loop hasta que se abre */
-.envelope:not(.is-open) {
+/* Sacudida del sobre cerrado: arranca al terminar la carga y se repite hasta abrirlo */
+.stage.is-ready .envelope:not(.is-open) {
   animation: envelope-shake 2s ease-in-out infinite;
   transform-origin: center 70%;
 }
@@ -1073,6 +1158,7 @@ button.hint-open:focus-visible {
   .stage-confetti .confetti-item,
   .toast-aviso,
   .envelope,
+  .loading-stamp,
   .resolved-stamp {
     animation: none !important;
   }

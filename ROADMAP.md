@@ -6,6 +6,7 @@
 
 ## 🚧 En Progreso / Siguiente
 - [ ] Migrar las imágenes públicas a `next/image` para optimización automática (LCP).
+- [ ] Aligerar los binarios: recomprimir `background.mp3` (3.5 MB), `foto.jpg` (657 KB), `estampilla.png` (408 KB) y evaluar si `foto.svg` (439 KB) es necesario.
 - [ ] Aligerar `background.webp` (~427 KB) reimplementándolo como patrón SVG propio.
 - [ ] Manifest PWA (`manifest.webmanifest` + íconos) para "Agregar a pantalla de inicio".
 - [ ] Analytics liviano (Vercel Analytics) para medir visitas de las familias.
@@ -36,5 +37,7 @@
 - [x] Sello "RESUELTO" animado que cae sobre la foto en el modal.
 - [x] Micro-sacudida del sobre cerrado para reforzar la llamada a la acción.
 - [x] Focus trap en el lightbox para contener el foco con teclado.
+- [x] Pantalla de carga con barra de progreso que precarga foto, estampilla y fondo (con red de seguridad de 12s).
+- [x] Audio en carga diferida (`preload="none"`): el MP3 (3.5 MB) se descarga recién al abrir el sobre, no al entrar.
 
-*Última actualización: 13 de Octubre de 2026 (Pulido sensorial: vibración, sello RESUELTO, micro-shake del sobre y focus trap del modal)*
+*Última actualización: 13 de Octubre de 2026 (Pantalla de carga con progreso y audio en carga diferida para mejorar el tiempo de arranque)*

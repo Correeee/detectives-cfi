@@ -7,7 +7,8 @@ Experiencia web interactiva de felicitación para las familias de los detectives
 - **Sobre interactivo**: apertura de solapa con animación 3D y revelación de la foto.
 - **Apertura automática del lightbox** tras la animación de salida de la foto.
 - **Tarjeta de celebración** con mensaje para las familias (tipografía *Fredoka*).
-- **Música de fondo** (`background.mp3`) con control flotante para pausar/reanudar.
+- **Pantalla de carga** con barra de progreso que precarga foto, estampilla y fondo antes de mostrar el sobre.
+- **Música de fondo** (`background.mp3`) con control flotante para pausar/reanudar, en **carga diferida** (se descarga al abrir el sobre).
 - **Efecto de sonido de apertura** ("whoosh" sintetizado con Web Audio API, sin archivos extra).
 - **Vibración** (feedback háptico) al abrir el sobre en dispositivos compatibles.
 - **Sello "RESUELTO"** que cae en diagonal sobre la foto en el modal.
