@@ -19,6 +19,7 @@ export default function Page() {
   const [cargando, setCargando] = useState(true);
   const [saliendo, setSaliendo] = useState(false);
   const [progreso, setProgreso] = useState(0);
+  const [listo, setListo] = useState(false);
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const stageRef = useRef<HTMLElement | null>(null);
@@ -28,36 +29,26 @@ export default function Page() {
   // "Compartir" el archivo ya esté listo (sin perder el gesto del usuario).
   const tarjetaRef = useRef<Blob | null>(null);
   const tarjetaPromesaRef = useRef<Promise<Blob> | null>(null);
-  // Indica si el audio ya fue solicitado (carga diferida)
-  const audioSolicitadoRef = useRef(false);
-
-  const fotoSrc = getAssetPath('/foto.jpg');
+  const fotoSrc = getAssetPath('/foto.webp');
   const estampillaSrc = getAssetPath('/estampilla.png');
   const audioSrc = getAssetPath('/background.mp3');
   const fondoSrc = getAssetPath('/background.webp');
 
-  // Precarga los assets visuales para que todo aparezca listo de una sola vez
+  // Precarga los assets visuales y el audio; habilita la entrada al completar
   useEffect(() => {
-    const fuentes = [fotoSrc, estampillaSrc, fondoSrc];
+    const imagenes = [fotoSrc, estampillaSrc, fondoSrc];
+    const total = imagenes.length + 1; // + el audio
     let cargados = 0;
     let cancelado = false;
 
     const avanzar = () => {
       if (cancelado) return;
       cargados += 1;
-      setProgreso(Math.round((cargados / fuentes.length) * 100));
-
-      if (cargados >= fuentes.length) {
-        window.setTimeout(() => {
-          if (!cancelado) setSaliendo(true);
-        }, 250);
-        window.setTimeout(() => {
-          if (!cancelado) setCargando(false);
-        }, 650);
-      }
+      setProgreso(Math.round((cargados / total) * 100));
+      if (cargados >= total) setListo(true);
     };
 
-    fuentes.forEach((src) => {
+    imagenes.forEach((src) => {
       let hecho = false;
       const fin = () => {
         if (hecho) return;
@@ -71,30 +62,51 @@ export default function Page() {
       if (img.complete) fin();
     });
 
-    // Red de seguridad: nunca dejar la pantalla de carga más de 12s
-    const seguridad = window.setTimeout(() => {
-      if (!cancelado) {
-        setProgreso(100);
-        setSaliendo(true);
-        setCargando(false);
-      }
-    }, 12000);
+    // Audio: cuenta como cargado cuando puede reproducirse sin cortes
+    const audio = audioRef.current;
+    if (audio) {
+      let hechoAudio = false;
+      const finAudio = () => {
+        if (hechoAudio) return;
+        hechoAudio = true;
+        avanzar();
+      };
+      audio.addEventListener('canplaythrough', finAudio);
+      audio.addEventListener('error', finAudio);
+      if (audio.readyState >= 4) finAudio();
 
+      return () => {
+        cancelado = true;
+        audio.removeEventListener('canplaythrough', finAudio);
+        audio.removeEventListener('error', finAudio);
+      };
+    }
+
+    avanzar();
     return () => {
       cancelado = true;
-      window.clearTimeout(seguridad);
     };
   }, [fotoSrc, estampillaSrc, fondoSrc]);
+
+  // Red de seguridad: nunca dejar la pantalla de carga más de 12s
+  useEffect(() => {
+    if (!cargando) return;
+    const seguridad = window.setTimeout(() => {
+      setProgreso(100);
+      setListo(true);
+    }, 12000);
+    return () => window.clearTimeout(seguridad);
+  }, [cargando]);
+
+  // El usuario toca "Comenzar": se desvanece la pantalla y arranca la experiencia
+  const entrar = useCallback(() => {
+    setSaliendo(true);
+    window.setTimeout(() => setCargando(false), 450);
+  }, []);
 
   const iniciarAudio = useCallback(() => {
     const audio = audioRef.current;
     if (!audio) return;
-
-    // Carga diferida: el MP3 se descarga recién al abrir el sobre
-    if (!audioSolicitadoRef.current) {
-      audioSolicitadoRef.current = true;
-      audio.load();
-    }
 
     audio
       .play()
@@ -335,10 +347,10 @@ export default function Page() {
 
   return (
     <main className={`stage ${cargando ? '' : 'is-ready'}`} ref={stageRef}>
-      {/* Audio en carga diferida: el MP3 se descarga recién al abrir el sobre */}
-      <audio ref={audioRef} src={audioSrc} preload="none" loop />
+      {/* Audio precargado junto con el resto para que la experiencia arranque completa */}
+      <audio ref={audioRef} src={audioSrc} preload="auto" loop />
 
-      {/* Pantalla de carga con barra de progreso */}
+      {/* Pantalla de carga: espera a que todo esté listo y da paso al usuario */}
       {cargando && (
         <div
           className={`loading-screen ${saliendo ? 'is-hiding' : ''}`}
@@ -350,11 +362,19 @@ export default function Page() {
             <span className="loading-stamp" aria-hidden="true">
               🔎
             </span>
-            <p className="loading-title">Preparando el caso…</p>
+            <p className="loading-title">
+              {listo ? '¡Todo listo!' : 'Preparando el caso…'}
+            </p>
             <div className="loading-bar" aria-hidden="true">
               <div className="loading-bar-fill" style={{ width: `${progreso}%` }} />
             </div>
-            <p className="loading-percent">{progreso}%</p>
+            {listo ? (
+              <button type="button" className="loading-enter" onClick={entrar}>
+                🔎 Comenzar
+              </button>
+            ) : (
+              <p className="loading-percent">{progreso}%</p>
+            )}
           </div>
         </div>
       )}

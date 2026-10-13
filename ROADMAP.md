@@ -6,7 +6,7 @@
 
 ## 🚧 En Progreso / Siguiente
 - [ ] Migrar las imágenes públicas a `next/image` para optimización automática (LCP).
-- [ ] Aligerar los binarios: recomprimir `background.mp3` (3.5 MB), `foto.jpg` (657 KB), `estampilla.png` (408 KB) y evaluar si `foto.svg` (439 KB) es necesario.
+- [ ] Aligerar los binarios: recomprimir `background.mp3` (3.5 MB) y `estampilla.png` (408 KB); evaluar si `foto.svg` (439 KB) es necesario.
 - [ ] Aligerar `background.webp` (~427 KB) reimplementándolo como patrón SVG propio.
 - [ ] Manifest PWA (`manifest.webmanifest` + íconos) para "Agregar a pantalla de inicio".
 - [ ] Analytics liviano (Vercel Analytics) para medir visitas de las familias.
@@ -37,7 +37,7 @@
 - [x] Sello "RESUELTO" animado que cae sobre la foto en el modal.
 - [x] Micro-sacudida del sobre cerrado para reforzar la llamada a la acción.
 - [x] Focus trap en el lightbox para contener el foco con teclado.
-- [x] Pantalla de carga con barra de progreso que precarga foto, estampilla y fondo (con red de seguridad de 12s).
-- [x] Audio en carga diferida (`preload="none"`): el MP3 (3.5 MB) se descarga recién al abrir el sobre, no al entrar.
+- [x] Pantalla de carga con barra de progreso que precarga foto, estampilla, fondo y audio, y habilita el ingreso con botón "Comenzar" al completar (con red de seguridad de 12s).
+- [x] Uso de `foto.webp` (322 KB) en vez de `foto.jpg` (657 KB) en la experiencia del cliente.
 
-*Última actualización: 13 de Octubre de 2026 (Pantalla de carga con progreso y audio en carga diferida para mejorar el tiempo de arranque)*
+*Última actualización: 13 de Octubre de 2026 (Pantalla de carga que precarga todo y da paso con botón "Comenzar", y foto principal en WebP)*

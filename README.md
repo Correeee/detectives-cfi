@@ -7,14 +7,15 @@ Experiencia web interactiva de felicitación para las familias de los detectives
 - **Sobre interactivo**: apertura de solapa con animación 3D y revelación de la foto.
 - **Apertura automática del lightbox** tras la animación de salida de la foto.
 - **Tarjeta de celebración** con mensaje para las familias (tipografía *Fredoka*).
-- **Pantalla de carga** con barra de progreso que precarga foto, estampilla y fondo antes de mostrar el sobre.
-- **Música de fondo** (`background.mp3`) con control flotante para pausar/reanudar, en **carga diferida** (se descarga al abrir el sobre).
+- **Pantalla de carga** con barra de progreso que precarga foto, estampilla, fondo y audio, y habilita el ingreso con un botón **"Comenzar"** cuando todo está listo.
+- **Música de fondo** (`background.mp3`) con control flotante para pausar/reanudar.
 - **Efecto de sonido de apertura** ("whoosh" sintetizado con Web Audio API, sin archivos extra).
 - **Vibración** (feedback háptico) al abrir el sobre en dispositivos compatibles.
 - **Sello "RESUELTO"** que cae en diagonal sobre la foto en el modal.
 - **Micro-sacudida** del sobre cerrado para invitar a tocarlo.
 - **Confetti** al abrir el sobre y lluvia festiva dentro del modal (componente reutilizable).
 - **Focus trap** en el modal: el foco no puede escapar del lightbox con Tab.
+- Uso de [`foto.webp`](public/foto.webp) (322 KB) en lugar de `foto.jpg` para reducir el peso de carga.
 - **Compartir / descargar la tarjeta** como imagen JPEG generada en `<canvas>` vía `navigator.share` (share nativo del sistema, que incluye WhatsApp; fallback a descarga).
 - **Preview OpenGraph** generada en runtime (`app/opengraph-image.tsx`, 1200×630).
 - **Fondo temático** de detectives (`background.webp`) con velo cálido y ajuste para iOS/Safari.
@@ -59,7 +60,7 @@ components/
   Lightbox.tsx         # modal de celebración + acciones de compartir
   Confetti.tsx         # lluvia de confetti reutilizable
 public/
-  foto.jpg, foto.svg, estampilla.png, background.webp, background.mp3
+  foto.webp, foto.jpg (solo para la imagen OpenGraph), estampilla.png, background.webp, background.mp3
 ```
 
 ## ♿ Notas de accesibilidad
