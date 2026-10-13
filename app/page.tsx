@@ -19,6 +19,8 @@ export default function Page() {
   const [cargando, setCargando] = useState(true);
   const [saliendo, setSaliendo] = useState(false);
   const [progreso, setProgreso] = useState(0);
+  // Cantidad de puntos suspensivos visibles en el texto "Cargando"
+  const [puntos, setPuntos] = useState(0);
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const stageRef = useRef<HTMLElement | null>(null);
@@ -105,6 +107,15 @@ export default function Page() {
       setCargando(false);
     }, 12000);
     return () => window.clearTimeout(seguridad);
+  }, [cargando]);
+
+  // Puntos suspensivos animados: Cargando · Cargando. · Cargando.. · Cargando...
+  useEffect(() => {
+    if (!cargando) return;
+    const intervalo = window.setInterval(() => {
+      setPuntos((p) => (p + 1) % 4);
+    }, 400);
+    return () => window.clearInterval(intervalo);
   }, [cargando]);
 
   const iniciarAudio = useCallback(() => {
@@ -365,7 +376,12 @@ export default function Page() {
             <span className="loading-stamp" aria-hidden="true">
               🔎
             </span>
-            <p className="loading-title">Cargando…</p>
+            <p className="loading-title">
+              Cargando
+              <span className="loading-dots" aria-hidden="true">
+                {'.'.repeat(puntos)}
+              </span>
+            </p>
             <div className="loading-bar" aria-hidden="true">
               <div className="loading-bar-fill" style={{ width: `${progreso}%` }} />
             </div>

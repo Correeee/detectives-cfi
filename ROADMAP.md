@@ -39,6 +39,6 @@
 - [x] Focus trap en el lightbox para contener el foco con teclado.
 - [x] Pantalla de carga con barra de progreso que precarga foto, estampilla, fondo y audio, y avanza sola al completar (con red de seguridad de 12s).
 - [x] Uso de `foto.webp` (322 KB) en vez de `foto.jpg` (657 KB) en la experiencia del cliente.
-- [x] Texto de carga simple ("Cargando…") con barra de progreso y `aria-live` (se descartaron las frases rotativas a pedido).
+- [x] Texto de carga simple con puntos suspensivos animados ("Cargando · Cargando. · Cargando.. · Cargando...") y barra de progreso (se descartaron las frases rotativas a pedido).
 
 *Última actualización: 13 de Octubre de 2026 (Pantalla de carga con mensajes rotativos temáticos que da paso automático al sobre, y foto principal en WebP)*

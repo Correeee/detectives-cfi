@@ -179,6 +179,14 @@ body {
   animation: phrase-in 0.45s ease both;
 }
 
+/* Puntos suspensivos animados: reservamos el ancho de los 3 puntos para
+   que el texto no "salte" mientras se van agregando */
+.loading-dots {
+  display: inline-block;
+  min-width: 3ch;
+  text-align: left;
+}
+
 @keyframes phrase-in {
   from {
     opacity: 0;
