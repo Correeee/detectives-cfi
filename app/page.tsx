@@ -218,34 +218,6 @@ export default function Page() {
     setCompartiendo(false);
   }, [compartiendo, descargarBlob, obtenerBlobTarjeta, mostrarAviso]);
 
-  // Comparte el link de la app (Web Share API) con fallback a copiar al portapapeles
-  const copiarLink = useCallback(async () => {
-    try {
-      await navigator.clipboard.writeText(window.location.href);
-      mostrarAviso('🔗 Link copiado. ¡Compartilo con la familia!');
-    } catch {
-      mostrarAviso('No se pudo copiar el link.');
-    }
-  }, [mostrarAviso]);
-
-  const compartirLink = useCallback(async () => {
-    const nav = typeof navigator !== 'undefined' ? navigator : undefined;
-    const shareUrl = typeof window !== 'undefined' ? window.location.href : '';
-    if (nav && typeof nav.share === 'function') {
-      try {
-        await nav.share({
-          title: '¡Caso Resuelto! · Detectives de 5.º B',
-          text: '¡Misión cumplida! 🔎 Mirá la foto grupal y el mensaje para las familias.',
-          url: shareUrl,
-        });
-      } catch (err) {
-        if (!(err instanceof DOMException && err.name === 'AbortError')) copiarLink();
-      }
-      return;
-    }
-    copiarLink();
-  }, [copiarLink]);
-
   // Al abrir el sobre, espera a que termine de salir la foto (~1.7s) y abre el lightbox automáticamente
   useEffect(() => {
     if (!abierto) return;
@@ -403,7 +375,6 @@ export default function Page() {
           alt="Foto de los detectives"
           onClose={cerrarAmpliada}
           onShare={compartirTarjeta}
-          onShareLink={compartirLink}
           compartiendo={compartiendo}
         />
       )}

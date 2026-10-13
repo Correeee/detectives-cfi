@@ -915,6 +915,25 @@ button.hint-open:focus-visible {
   background: linear-gradient(135deg, #f77f00, #d62828);
 }
 
+.lightbox-action.whatsapp {
+  background: linear-gradient(135deg, #25d366, #128c7e);
+  box-shadow:
+    0 0 0 3px rgba(255, 255, 255, 0.6),
+    0 6px 18px rgba(18, 140, 126, 0.35);
+}
+
+.lightbox-action.whatsapp:hover {
+  box-shadow:
+    0 0 0 3px rgba(255, 255, 255, 0.7),
+    0 8px 24px rgba(18, 140, 126, 0.45);
+}
+
+.wa-icon {
+  width: 20px;
+  height: 20px;
+  display: block;
+}
+
 .lightbox-action:focus-visible {
   outline: 3px solid #ffbe0b;
   outline-offset: 3px;
