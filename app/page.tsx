@@ -35,14 +35,17 @@ export default function Page() {
   const tarjetaRef = useRef<Blob | null>(null);
   const tarjetaPromesaRef = useRef<Promise<Blob> | null>(null);
   const fotoSrc = getAssetPath('/foto.webp');
-  const estampillaSrc = getAssetPath('/estampilla.png');
+  // En la experiencia usamos la estampilla en WebP (liviana, ~37 KB);
+  // el PNG se reserva para favicon y OpenGraph.
+  const estampillaSrc = getAssetPath('/estampilla.webp');
   const audioSrc = getAssetPath('/background.mp3');
   const fondoSrc = getAssetPath('/background.webp');
 
-  // Precarga los assets visuales y el audio; habilita la entrada al completar
+  // Precarga SOLO los assets visuales para entrar rápido. La música NO bloquea
+  // la entrada: se descarga en paralelo (preload="auto") y arranca al abrir.
   useEffect(() => {
     const imagenes = [fotoSrc, estampillaSrc, fondoSrc];
-    const total = imagenes.length + 1; // + el audio
+    const total = imagenes.length;
     let cargados = 0;
     let cancelado = false;
 
@@ -83,27 +86,6 @@ export default function Page() {
       if (img.complete) fin();
     });
 
-    // Audio: cuenta como cargado cuando puede reproducirse sin cortes
-    const audio = audioRef.current;
-    if (audio) {
-      let hechoAudio = false;
-      const finAudio = () => {
-        if (hechoAudio) return;
-        hechoAudio = true;
-        avanzar();
-      };
-      audio.addEventListener('canplaythrough', finAudio);
-      audio.addEventListener('error', finAudio);
-      if (audio.readyState >= 4) finAudio();
-
-      return () => {
-        cancelado = true;
-        audio.removeEventListener('canplaythrough', finAudio);
-        audio.removeEventListener('error', finAudio);
-      };
-    }
-
-    avanzar();
     return () => {
       cancelado = true;
     };
@@ -393,7 +375,7 @@ export default function Page() {
 
   return (
     <main className={`stage ${cargando ? '' : 'is-ready'}`} ref={stageRef}>
-      {/* Audio precargado junto con el resto para que la experiencia arranque completa */}
+      {/* La música se descarga en paralelo pero no bloquea la entrada */}
       <audio ref={audioRef} src={audioSrc} preload="auto" loop />
 
       {/* Pantalla de carga: espera a que todo esté listo y da paso al usuario */}

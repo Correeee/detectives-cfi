@@ -7,7 +7,7 @@ Experiencia web interactiva de felicitación para las familias de los detectives
 - **Sobre interactivo**: apertura de solapa con animación 3D y revelación de la foto.
 - **Apertura automática del lightbox** tras la animación de salida de la foto.
 - **Tarjeta de celebración** con mensaje para las familias (tipografía *Fredoka*).
-- **Pantalla de carga** con texto "Cargando" y puntos suspensivos animados, más barra de progreso que combina el progreso real de precarga (foto, estampilla, fondo y audio) con un avance automático creíble hasta 95%; al completar, salta a 100% y avanza sola hacia la experiencia.
+- **Pantalla de carga** con texto "Cargando" y puntos suspensivos animados, más barra de progreso que combina el progreso real de precarga (foto, estampilla y fondo) con un avance automático creíble hasta 95%; la música se descarga en paralelo sin bloquear la entrada; al completar, salta a 100% y avanza sola hacia la experiencia.
 - **Música de fondo** (`background.mp3`) con control flotante para pausar/reanudar.
 - **Efecto de sonido de apertura** ("whoosh" sintetizado con Web Audio API, sin archivos extra).
 - **Vibración** (feedback háptico) al abrir el sobre en dispositivos compatibles.
@@ -15,7 +15,7 @@ Experiencia web interactiva de felicitación para las familias de los detectives
 - **Micro-sacudida** del sobre cerrado para invitar a tocarlo.
 - **Confetti** al abrir el sobre y lluvia festiva dentro del modal (componente reutilizable).
 - **Focus trap** en el modal: el foco no puede escapar del lightbox con Tab.
-- Uso de [`foto.webp`](public/foto.webp) (322 KB) en lugar de `foto.jpg` para reducir el peso de carga.
+- **Optimización de binarios**: `foto.webp` (254 KB), `background.webp` (170 KB), `estampilla.webp` (37 KB, solo para la app) y `background.mp3` recomprimido a mono 64 kbps (1,16 MB). El peso precargado bajó de ~1,14 MB a ~0,46 MB.
 - **Compartir / descargar la tarjeta** como imagen JPEG generada en `<canvas>` vía `navigator.share` (share nativo del sistema, que incluye WhatsApp; fallback a descarga).
 - **Preview OpenGraph** generada en runtime (`app/opengraph-image.tsx`, 1200×630).
 - **Fondo temático** de detectives (`background.webp`) con velo cálido y ajuste para iOS/Safari.
@@ -60,7 +60,8 @@ components/
   Lightbox.tsx         # modal de celebración + acciones de compartir
   Confetti.tsx         # lluvia de confetti reutilizable
 public/
-  foto.webp, foto.jpg (solo para la imagen OpenGraph), estampilla.png, background.webp, background.mp3
+  foto.webp (app), foto.jpg (solo OpenGraph), estampilla.webp (app),
+  estampilla.png (favicon + OpenGraph), background.webp, background.mp3
 ```
 
 ## ♿ Notas de accesibilidad

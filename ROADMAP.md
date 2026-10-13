@@ -6,8 +6,6 @@
 
 ## 🚧 En Progreso / Siguiente
 - [ ] Migrar las imágenes públicas a `next/image` para optimización automática (LCP).
-- [ ] Aligerar los binarios: recomprimir `background.mp3` (3.5 MB) y `estampilla.png` (408 KB); evaluar si `foto.svg` (439 KB) es necesario.
-- [ ] Aligerar `background.webp` (~427 KB) reimplementándolo como patrón SVG propio.
 - [ ] Manifest PWA (`manifest.webmanifest` + íconos) para "Agregar a pantalla de inicio".
 - [ ] Analytics liviano (Vercel Analytics) para medir visitas de las familias.
 - [ ] `robots.txt` y `sitemap.xml` para completar el SEO técnico.
@@ -40,6 +38,8 @@
 - [x] Pantalla de carga con barra de progreso que precarga foto, estampilla, fondo y audio, y avanza sola al completar (con red de seguridad de 12s).
 - [x] Progreso combinado: piso real (recursos cargados) + avance automático creíble hasta 95%; salta a 100% solo cuando todo termina (evita quedar clavado en 75%).
 - [x] Uso de `foto.webp` (322 KB) en vez de `foto.jpg` (657 KB) en la experiencia del cliente.
+- [x] Optimización de binarios con ffmpeg/ImageMagick: `foto.webp` 254 KB, `background.webp` 170 KB, `estampilla.webp` 37 KB (app) y `background.mp3` en mono 64 kbps (1,16 MB); se eliminó `foto.svg` (sin uso).
+- [x] La música dejó de bloquear la pantalla de carga: se descarga en paralelo y arranca al abrir el sobre (peso precargado ~1,14 MB → ~0,46 MB).
 - [x] Texto de carga simple con puntos suspensivos animados ("Cargando · Cargando. · Cargando.. · Cargando...") y barra de progreso (se descartaron las frases rotativas a pedido).
 
 *Última actualización: 13 de Octubre de 2026 (Pantalla de carga con mensajes rotativos temáticos que da paso automático al sobre, y foto principal en WebP)*
