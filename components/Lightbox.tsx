@@ -13,6 +13,9 @@ type Props = {
   compartiendo?: boolean;
 };
 
+const FOCALIZABLES =
+  'a[href], button:not([disabled]), textarea:not([disabled]), input:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])';
+
 export default function Lightbox({
   src,
   alt,
@@ -20,6 +23,7 @@ export default function Lightbox({
   onShare,
   compartiendo = false,
 }: Props) {
+  const cardRef = useRef<HTMLDivElement>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
@@ -28,8 +32,41 @@ export default function Lightbox({
     closeRef.current?.focus();
 
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
+      if (e.key === 'Escape') {
+        onClose();
+        return;
+      }
+
+      // Focus trap: mantiene el tab dentro del modal
+      if (e.key === 'Tab') {
+        const contenedor = cardRef.current;
+        if (!contenedor) return;
+        const focalizables = Array.from(
+          contenedor.querySelectorAll<HTMLElement>(FOCALIZABLES)
+        ).filter((el) => el.offsetParent !== null || el === document.activeElement);
+
+        if (focalizables.length === 0) {
+          e.preventDefault();
+          return;
+        }
+
+        const primero = focalizables[0];
+        const ultimo = focalizables[focalizables.length - 1];
+        const activo = document.activeElement;
+        const dentro = activo instanceof Node && contenedor.contains(activo);
+
+        if (e.shiftKey) {
+          if (!dentro || activo === primero) {
+            e.preventDefault();
+            ultimo.focus();
+          }
+        } else if (!dentro || activo === ultimo) {
+          e.preventDefault();
+          primero.focus();
+        }
+      }
     };
+
     window.addEventListener('keydown', onKey);
 
     return () => {
@@ -62,14 +99,20 @@ export default function Lightbox({
         ×
       </button>
 
-      <div className="lightbox-card" onClick={(e) => e.stopPropagation()}>
+      <div ref={cardRef} className="lightbox-card" onClick={(e) => e.stopPropagation()}>
         <div className="lightbox-photo-side">
-          <img
-            src={src}
-            alt={alt}
-            className="lightbox-photo"
-            draggable={false}
-          />
+          <div className="photo-wrap">
+            <img
+              src={src}
+              alt={alt}
+              className="lightbox-photo"
+              draggable={false}
+            />
+            {/* Sello "RESUELTO" que cae sobre la foto (cerrar el expediente) */}
+            <span className="resolved-stamp" aria-hidden="true">
+              RESUELTO
+            </span>
+          </div>
         </div>
 
         <div className="celebration-side">

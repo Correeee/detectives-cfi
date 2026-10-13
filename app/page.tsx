@@ -6,7 +6,7 @@ import Lightbox from '../components/Lightbox';
 import Confetti from '../components/Confetti';
 import { getAssetPath } from './basePath';
 import { generarTarjeta } from './shareCard';
-import { reproducirWhoosh } from './sfx';
+import { reproducirAplausos, reproducirWhoosh } from './sfx';
 
 export default function Page() {
   const [abierto, setAbierto] = useState(false);
@@ -24,6 +24,7 @@ export default function Page() {
   // "Compartir" el archivo ya esté listo (sin perder el gesto del usuario).
   const tarjetaRef = useRef<Blob | null>(null);
   const tarjetaPromesaRef = useRef<Promise<Blob> | null>(null);
+  const aplausosRef = useRef(false);
 
   const fotoSrc = getAssetPath('/foto.jpg');
   const estampillaSrc = getAssetPath('/estampilla.png');
@@ -97,6 +98,17 @@ export default function Page() {
     return promesa;
   }, [estampillaSrc, fotoSrc]);
 
+  // Feedback táctil al abrir el sobre (solo si el dispositivo lo soporta)
+  const vibrar = useCallback(() => {
+    if (typeof navigator !== 'undefined' && 'vibrate' in navigator) {
+      try {
+        navigator.vibrate([0, 40, 60, 40]);
+      } catch {
+        /* algunos navegadores ignoran la vibración sin gesto */
+      }
+    }
+  }, []);
+
   // Ráfaga corta de confetti sobre el sobre al abrirlo
   const lanzarConfetti = useCallback(() => {
     const contenedor = confettiRef.current;
@@ -120,9 +132,10 @@ export default function Page() {
     if (abierto) return;
     setAbierto(true);
     reproducirWhoosh();
+    vibrar();
     lanzarConfetti();
     iniciarAudio();
-  }, [abierto, iniciarAudio, lanzarConfetti]);
+  }, [abierto, iniciarAudio, lanzarConfetti, vibrar]);
 
   const cerrarAmpliada = useCallback(() => {
     if (timerRef.current) {
@@ -232,6 +245,13 @@ export default function Page() {
 
     return () => window.clearTimeout(id);
   }, [abierto, obtenerBlobTarjeta]);
+
+  // Aplausos de celebración al aparecer el modal (una sola vez por sesión)
+  useEffect(() => {
+    if (!ampliada || aplausosRef.current) return;
+    aplausosRef.current = true;
+    reproducirAplausos();
+  }, [ampliada]);
 
   useEffect(() => {
     return () => {

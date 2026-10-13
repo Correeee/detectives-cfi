@@ -9,7 +9,12 @@ Experiencia web interactiva de felicitación para las familias de los detectives
 - **Tarjeta de celebración** con mensaje para las familias (tipografía *Fredoka*).
 - **Música de fondo** (`background.mp3`) con control flotante para pausar/reanudar.
 - **Efecto de sonido de apertura** ("whoosh" sintetizado con Web Audio API, sin archivos extra).
+- **Aplausos de celebración** al aparecer el modal (también sintetizados con Web Audio API).
+- **Vibración** (feedback háptico) al abrir el sobre en dispositivos compatibles.
+- **Sello "RESUELTO"** que cae en diagonal sobre la foto en el modal.
+- **Micro-sacudida** del sobre cerrado para invitar a tocarlo.
 - **Confetti** al abrir el sobre y lluvia festiva dentro del modal (componente reutilizable).
+- **Focus trap** en el modal: el foco no puede escapar del lightbox con Tab.
 - **Compartir / descargar la tarjeta** como imagen JPEG generada en `<canvas>` vía `navigator.share` (share nativo del sistema, que incluye WhatsApp; fallback a descarga).
 - **Preview OpenGraph** generada en runtime (`app/opengraph-image.tsx`, 1200×630).
 - **Fondo temático** de detectives (`background.webp`) con velo cálido y ajuste para iOS/Safari.
@@ -60,8 +65,9 @@ public/
 ## ♿ Notas de accesibilidad
 
 - El sobre y la foto son operables con teclado (`Enter` / `Espacio`).
+- Focus trap dentro del lightbox: `Tab`/`Shift+Tab` quedan contenidos y `Escape` cierra.
 - Las acciones de compartir anuncian su resultado vía un aviso `aria-live="polite"`.
-- Con `prefers-reduced-motion` se desactivan las animaciones.
+- Con `prefers-reduced-motion` se desactivan las animaciones (el sello queda visible igual).
 
 ## 📄 Estado del proyecto
 
