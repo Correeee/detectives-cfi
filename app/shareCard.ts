@@ -6,7 +6,7 @@
 // - No se usa `crossOrigin`: los assets son del mismo origen, así que no hace
 //   falta una petición CORS extra (que forzaba un cache miss y marcaba lentitud).
 // - La espera de fuentes está acotada con un timeout para no bloquear el render.
-// - Cada paso tiene timeout y logs para diagnosticar cuelgues.
+// - Cada paso tiene timeout para evitar cuelgues indefinidos.
 // - La salida es JPEG (más rápido de codificar y más liviano que PNG en mobile).
 
 const ANCHO = 1080;
@@ -23,7 +23,7 @@ const cacheImagenes = new Map<string, Promise<HTMLImageElement>>();
 function conTimeout<T>(promesa: Promise<T>, ms: number, etiqueta: string): Promise<T> {
     return new Promise<T>((resolve, reject) => {
         const id = setTimeout(() => {
-            reject(new Error(`[tarjeta] Timeout en: ${etiqueta} (${ms}ms)`));
+            reject(new Error(`Timeout en: ${etiqueta} (${ms}ms)`));
         }, ms);
         promesa.then(
             (valor) => {
@@ -40,21 +40,13 @@ function conTimeout<T>(promesa: Promise<T>, ms: number, etiqueta: string): Promi
 
 function cargarImagen(src: string): Promise<HTMLImageElement> {
     const enCache = cacheImagenes.get(src);
-    if (enCache) {
-        console.log('[tarjeta] imagen desde caché:', src);
-        return enCache;
-    }
+    if (enCache) return enCache;
 
-    console.log('[tarjeta] cargando imagen:', src);
     const promesa = new Promise<HTMLImageElement>((resolve, reject) => {
         const img = new Image();
         img.decoding = 'async';
-        img.onload = () => {
-            console.log('[tarjeta] imagen OK:', src, `${img.naturalWidth}x${img.naturalHeight}`);
-            resolve(img);
-        };
-        img.onerror = (e) => {
-            console.error('[tarjeta] imagen ERROR:', src, e);
+        img.onload = () => resolve(img);
+        img.onerror = () => {
             cacheImagenes.delete(src);
             reject(new Error(`No se pudo cargar la imagen: ${src}`));
         };
@@ -62,7 +54,6 @@ function cargarImagen(src: string): Promise<HTMLImageElement> {
 
         // Por si el navegador ya la tenía completa y no dispara onload
         if (img.complete && img.naturalWidth > 0) {
-            console.log('[tarjeta] imagen ya completa:', src);
             resolve(img);
         }
     });
@@ -78,7 +69,6 @@ function cargarImagen(src: string): Promise<HTMLImageElement> {
  */
 async function asegurarFuentes(): Promise<void> {
     if (typeof document === 'undefined' || !('fonts' in document)) return;
-    console.log('[tarjeta] esperando fuentes (máx 500ms)…');
     try {
         await Promise.race([
             Promise.all([
@@ -88,9 +78,8 @@ async function asegurarFuentes(): Promise<void> {
             ]),
             new Promise((resolve) => setTimeout(resolve, 500)),
         ]);
-        console.log('[tarjeta] fuentes listas');
-    } catch (err) {
-        console.warn('[tarjeta] fuentes: se sigue sin esperarlas', err);
+    } catch {
+        /* la tipografía es opcional para generar la tarjeta */
     }
 }
 
@@ -154,24 +143,19 @@ function ajustarLineas(
 
 function canvasABlob(canvas: HTMLCanvasElement, tipo: string, calidad: number): Promise<Blob> {
     return new Promise<Blob>((resolve, reject) => {
-        const id = setTimeout(() => reject(new Error('[tarjeta] Timeout en canvas.toBlob')), 10000);
+        const id = setTimeout(() => reject(new Error('Timeout en canvas.toBlob')), 10000);
         try {
             canvas.toBlob(
                 (blob) => {
                     clearTimeout(id);
-                    if (blob) {
-                        console.log('[tarjeta] toBlob OK:', blob.size, 'bytes');
-                        resolve(blob);
-                    } else {
-                        reject(new Error('[tarjeta] canvas.toBlob devolvió null'));
-                    }
+                    if (blob) resolve(blob);
+                    else reject(new Error('canvas.toBlob devolvió null'));
                 },
                 tipo,
                 calidad
             );
         } catch (err) {
             clearTimeout(id);
-            console.error('[tarjeta] canvas.toBlob lanzó excepción:', err);
             reject(err instanceof Error ? err : new Error(String(err)));
         }
     });
@@ -182,16 +166,9 @@ function canvasABlob(canvas: HTMLCanvasElement, tipo: string, calidad: number): 
  * Devuelve un Blob listo para compartir o descargar.
  */
 export async function generarTarjeta(fotoSrc: string, estampillaSrc: string): Promise<Blob> {
-    console.log('[tarjeta] inicio de generación');
-
     const foto = await cargarImagen(fotoSrc);
     await asegurarFuentes();
-    const sello = await cargarImagen(estampillaSrc).catch((err) => {
-        console.warn('[tarjeta] estampilla no disponible:', err);
-        return null;
-    });
-
-    console.log('[tarjeta] recursos listos, dibujando…');
+    const sello = await cargarImagen(estampillaSrc).catch(() => null);
 
     const canvas = document.createElement('canvas');
     canvas.width = ANCHO;
@@ -323,8 +300,5 @@ export async function generarTarjeta(fotoSrc: string, estampillaSrc: string): Pr
     ctx.fillStyle = '#ffffff';
     ctx.fillText(mision, cx, misionY + misionH / 2 + 2);
 
-    console.log('[tarjeta] dibujo completado, codificando JPEG…');
-    const blob = await canvasABlob(canvas, 'image/jpeg', 0.9);
-    console.log('[tarjeta] generación finalizada');
-    return blob;
+    return await canvasABlob(canvas, 'image/jpeg', 0.9);
 }

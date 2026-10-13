@@ -34,8 +34,8 @@ export default function Page() {
       audioRef.current
         .play()
         .then(() => setSonando(true))
-        .catch((err) => {
-          console.warn('Audio play error:', err);
+        .catch(() => {
+          /* el navegador puede bloquear el audio hasta el primer gesto */
         });
     }
   }, []);
@@ -65,20 +65,16 @@ export default function Page() {
   // Incluye un tope de tiempo para que NUNCA quede colgado en "Generando…".
   const obtenerBlobTarjeta = useCallback((): Promise<Blob> => {
     if (tarjetaRef.current) {
-      console.log('[share] usando tarjeta ya generada');
       return Promise.resolve(tarjetaRef.current);
     }
     if (tarjetaPromesaRef.current) {
-      console.log('[share] reutilizando generación en curso');
       return tarjetaPromesaRef.current;
     }
 
-    console.log('[share] iniciando generación de tarjeta');
     const generacion = generarTarjeta(fotoSrc, estampillaSrc);
 
     const promesa = new Promise<Blob>((resolve, reject) => {
       const id = setTimeout(() => {
-        console.error('[share] timeout esperando la generación de la tarjeta');
         reject(new Error('La generación de la tarjeta tardó demasiado'));
       }, 15000);
 
@@ -86,12 +82,10 @@ export default function Page() {
         (blob) => {
           clearTimeout(id);
           tarjetaRef.current = blob;
-          console.log('[share] tarjeta generada OK:', blob.size, 'bytes');
           resolve(blob);
         },
         (err) => {
           clearTimeout(id);
-          console.error('[share] error al generar la tarjeta:', err);
           reject(err);
         }
       );
@@ -165,15 +159,12 @@ export default function Page() {
   const compartirTarjeta = useCallback(async () => {
     if (compartiendo) return;
     setCompartiendo(true);
-    console.log('[share] toque en "Compartir tarjeta"');
 
     let archivo: File;
     try {
       const blob = await obtenerBlobTarjeta();
       archivo = new File([blob], 'detectives-5b.jpg', { type: 'image/jpeg' });
-      console.log('[share] archivo listo:', archivo.name, archivo.size, 'bytes');
-    } catch (err) {
-      console.error('[share] fallo la generación:', err);
+    } catch {
       setCompartiendo(false);
       mostrarAviso('No se pudo generar la imagen. Probá de nuevo.');
       return;
@@ -187,13 +178,10 @@ export default function Page() {
       try {
         puedeCompartir =
           typeof nav.canShare !== 'function' || nav.canShare({ files: [archivo] });
-      } catch (err) {
-        console.warn('[share] canShare arrojó error:', err);
+      } catch {
         puedeCompartir = false;
       }
     }
-
-    console.log('[share] navigator.share:', !!nav?.share, '· puedeCompartir:', puedeCompartir);
 
     if (nav && puedeCompartir) {
       try {
@@ -203,15 +191,12 @@ export default function Page() {
           text: '¡Misión cumplida! 🔎',
           url: shareUrl,
         });
-        console.log('[share] share nativo completado');
       } catch (err) {
-        console.error('[share] share nativo falló:', err);
         if (!(err instanceof DOMException && err.name === 'AbortError')) {
           mostrarAviso('No se pudo compartir. Probá de nuevo.');
         }
       }
     } else {
-      console.log('[share] sin share de archivos, descargando…');
       descargarBlob(archivo);
     }
 
