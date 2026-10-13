@@ -5,7 +5,11 @@
 - Objetivo: Experiencia interactiva para las familias de los alumnos de 5.º B con apertura de sobre animada, revelación de foto grupal, música de fondo, mensaje festivo de "Caso Resuelto" y despliegue nativo en Vercel.
 
 ## 🚧 En Progreso / Siguiente
-- [ ] Opciones adicionales de descarga o compartir tarjeta si las familias lo solicitan.
+- [ ] Migrar las imágenes públicas a `next/image` para optimización automática (LCP).
+- [ ] Aligerar `background.webp` (~427 KB) reimplementándolo como patrón SVG propio.
+- [ ] Manifest PWA (`manifest.webmanifest` + íconos) para "Agregar a pantalla de inicio".
+- [ ] Analytics liviano (Vercel Analytics) para medir visitas de las familias.
+- [ ] `robots.txt` y `sitemap.xml` para completar el SEO técnico.
 
 ## ✅ Completado
 - [x] Estructura base de Next.js y diseño de sobre con solapa interactiva.
@@ -22,5 +26,12 @@
 - [x] Optimización SEO completa: Open Graph, Twitter Cards, Schema.org estructurado, metadatos descriptivos y tags semánticos.
 - [x] Fondo temático de detectives (`background.webp`) aplicado como patrón repetido de toda la app, con velo cálido radial y ajuste para iOS/Safari.
 - [x] Configuración optimizada para Vercel: rutas nativas en la raíz (`/`), metadatos hacia `detectives-cfi.vercel.app` y eliminación del prefijo de subdirectorio.
+- [x] Componente `Confetti` reutilizable, extraído del lightbox para usarse también en la apertura.
+- [x] Efecto de sonido "whoosh" al abrir el sobre (Web Audio API), sincronizado con la animación de apertura.
+- [x] Ráfaga corta de confetti sobre el escenario en el instante de apertura del sobre.
+- [x] Compartir/descargar la tarjeta final como imagen PNG generada en canvas (`navigator.share` con fallback a descarga).
+- [x] Compartir el link de la app (Web Share API con fallback a copiar al portapapeles).
+- [x] Imagen OpenGraph generada en runtime (`app/opengraph-image.tsx`, 1200x630) para una preview atractiva al compartir por WhatsApp.
+- [x] Aviso flotante (toast) accesible para dar feedback de las acciones de compartir.
 
-*Última actualización: 12 de Octubre de 2026 (Adaptación y corrección completa para despliegue en Vercel)*
+*Última actualización: 13 de Octubre de 2026 (Compartir/descargar tarjeta como imagen, sonido y confetti de apertura, y preview OpenGraph generada)*

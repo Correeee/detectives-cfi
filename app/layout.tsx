@@ -37,21 +37,13 @@ export const metadata: Metadata = {
     siteName: 'Centro de Formación Integral',
     locale: 'es_AR',
     type: 'website',
-    images: [
-      {
-        url: '/foto.jpg',
-        width: 1024,
-        height: 768,
-        alt: 'Los detectives de 5.º B del Centro de Formación Integral',
-      },
-    ],
+    // La imagen la genera automáticamente `app/opengraph-image.tsx` (1200x630)
   },
   twitter: {
     card: 'summary_large_image',
     title: '🎉 ¡Caso Resuelto! · Detectives de 5.º B | CFI',
     description:
       'Los detectives del Centro de Formación Integral resolvieron el caso. ¡Misión cumplida!',
-    images: ['/foto.jpg'],
   },
   robots: {
     index: true,

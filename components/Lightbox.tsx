@@ -1,17 +1,28 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
-import { getAssetPath } from '../app/basePath';
+import Confetti from './Confetti';
 
 type Props = {
   src: string;
   alt: string;
   onClose: () => void;
+  /** Comparte o descarga la tarjeta como imagen */
+  onShare: () => void | Promise<void>;
+  /** Comparte o copia el link de la app */
+  onShareLink: () => void | Promise<void>;
+  /** Indica si la tarjeta se está generando */
+  compartiendo?: boolean;
 };
 
-const CONFETTI_PIECES = 24;
-
-export default function Lightbox({ src, alt, onClose }: Props) {
+export default function Lightbox({
+  src,
+  alt,
+  onClose,
+  onShare,
+  onShareLink,
+  compartiendo = false,
+}: Props) {
   const closeRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
@@ -39,11 +50,7 @@ export default function Lightbox({ src, alt, onClose }: Props) {
       onClick={onClose}
     >
       {/* Lluvia festiva de confetti en el fondo */}
-      <div className="confetti-rain" aria-hidden="true">
-        {Array.from({ length: CONFETTI_PIECES }).map((_, i) => (
-          <span key={i} className={`confetti-item confetti-c${(i % 6) + 1}`} />
-        ))}
-      </div>
+      <Confetti />
 
       <button
         ref={closeRef}
@@ -90,6 +97,26 @@ export default function Lightbox({ src, alt, onClose }: Props) {
 
           <div className="celebration-grade">
             ¡5.º B! ❤️
+          </div>
+
+          <div className="lightbox-actions">
+            <button
+              type="button"
+              className="lightbox-action primary"
+              onClick={onShare}
+              disabled={compartiendo}
+              aria-label="Compartir la tarjeta como imagen"
+            >
+              {compartiendo ? '🎨 Generando…' : '📤 Compartir tarjeta'}
+            </button>
+            <button
+              type="button"
+              className="lightbox-action"
+              onClick={onShareLink}
+              aria-label="Compartir el link de la app"
+            >
+              🔗 Compartir link
+            </button>
           </div>
         </div>
       </div>
