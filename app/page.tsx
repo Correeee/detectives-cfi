@@ -8,6 +8,18 @@ import { getAssetPath } from './basePath';
 import { generarTarjeta } from './shareCard';
 import { reproducirWhoosh } from './sfx';
 
+// Frases que rotan mientras se carga, con onda de detectives
+const FRASES_CARGA = [
+  'Preparando el caso… 🕵️',
+  'Revisando las huellas dactilares… 🖐️',
+  'Ajustando la lupa… 🔎',
+  'Reuniendo las pistas del 5.º B… 📁',
+  'Descifrando el código secreto… 🔐',
+  'Consultando el expediente… 📝',
+  'Revelando la foto del grupo… 📸',
+  '¡Casi listo, detectives! 🎉',
+];
+
 export default function Page() {
   const [abierto, setAbierto] = useState(false);
   const [ampliada, setAmpliada] = useState(false);
@@ -19,6 +31,7 @@ export default function Page() {
   const [cargando, setCargando] = useState(true);
   const [saliendo, setSaliendo] = useState(false);
   const [progreso, setProgreso] = useState(0);
+  const [fraseIdx, setFraseIdx] = useState(0);
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const stageRef = useRef<HTMLElement | null>(null);
@@ -105,6 +118,15 @@ export default function Page() {
       setCargando(false);
     }, 12000);
     return () => window.clearTimeout(seguridad);
+  }, [cargando]);
+
+  // Rota las frases mientras la pantalla de carga está visible
+  useEffect(() => {
+    if (!cargando) return;
+    const intervalo = window.setInterval(() => {
+      setFraseIdx((i) => (i + 1) % FRASES_CARGA.length);
+    }, 1600);
+    return () => window.clearInterval(intervalo);
   }, [cargando]);
 
   const iniciarAudio = useCallback(() => {
@@ -365,7 +387,9 @@ export default function Page() {
             <span className="loading-stamp" aria-hidden="true">
               🔎
             </span>
-            <p className="loading-title">Preparando el caso…</p>
+            <p className="loading-title" key={fraseIdx}>
+              {FRASES_CARGA[fraseIdx]}
+            </p>
             <div className="loading-bar" aria-hidden="true">
               <div className="loading-bar-fill" style={{ width: `${progreso}%` }} />
             </div>
