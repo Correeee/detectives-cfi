@@ -10,8 +10,7 @@ Experiencia web interactiva de felicitación para las familias de los detectives
 - **Música de fondo** (`background.mp3`) con control flotante para pausar/reanudar.
 - **Efecto de sonido de apertura** ("whoosh" sintetizado con Web Audio API, sin archivos extra).
 - **Confetti** al abrir el sobre y lluvia festiva dentro del modal (componente reutilizable).
-- **Compartir / descargar la tarjeta** como imagen PNG generada en `<canvas>` vía `navigator.share` (fallback a descarga).
-- **Compartir el link** de la app (Web Share API, fallback a copiar al portapapeles).
+- **Compartir / descargar la tarjeta** como imagen JPEG generada en `<canvas>` vía `navigator.share` (share nativo del sistema, que incluye WhatsApp; fallback a descarga).
 - **Preview OpenGraph** generada en runtime (`app/opengraph-image.tsx`, 1200×630).
 - **Fondo temático** de detectives (`background.webp`) con velo cálido y ajuste para iOS/Safari.
 - **Accesibilidad**: navegación por teclado, `aria-label`, `aria-live` en el aviso y respeto por `prefers-reduced-motion`.

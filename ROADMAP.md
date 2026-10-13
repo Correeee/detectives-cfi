@@ -29,8 +29,7 @@
 - [x] Componente `Confetti` reutilizable, extraído del lightbox para usarse también en la apertura.
 - [x] Efecto de sonido "whoosh" al abrir el sobre (Web Audio API), sincronizado con la animación de apertura.
 - [x] Ráfaga corta de confetti sobre el escenario en el instante de apertura del sobre.
-- [x] Compartir/descargar la tarjeta final como imagen PNG generada en canvas (`navigator.share` con fallback a descarga).
-- [x] Compartir el link de la app (Web Share API con fallback a copiar al portapapeles).
+- [x] Compartir/descargar la tarjeta final como imagen JPEG generada en canvas (`navigator.share` con fallback a descarga), con botón único estilo WhatsApp.
 - [x] Imagen OpenGraph generada en runtime (`app/opengraph-image.tsx`, 1200x630) para una preview atractiva al compartir por WhatsApp.
 - [x] Aviso flotante (toast) accesible para dar feedback de las acciones de compartir.
 
