@@ -21,6 +21,10 @@ export default function Page() {
   const [progreso, setProgreso] = useState(0);
   // Cantidad de puntos suspensivos visibles en el texto "Cargando"
   const [puntos, setPuntos] = useState(0);
+  // Progreso real (según recursos cargados) que actúa como piso de la barra
+  const progresoRealRef = useRef(0);
+  // true cuando terminaron de cargar TODOS los recursos reales
+  const listoRef = useRef(false);
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const stageRef = useRef<HTMLElement | null>(null);
@@ -45,10 +49,17 @@ export default function Page() {
     const avanzar = () => {
       if (cancelado) return;
       cargados += 1;
-      setProgreso(Math.round((cargados / total) * 100));
+      // El progreso real es el "piso": nunca permitimos que la barra retroceda
+      progresoRealRef.current = Math.max(
+        progresoRealRef.current,
+        Math.round((cargados / total) * 100),
+      );
+      setProgreso((p) => Math.max(p, progresoRealRef.current));
 
       // Al completar, la pantalla se cierra sola y da paso a la experiencia
       if (cargados >= total) {
+        listoRef.current = true;
+        setProgreso(100);
         window.setTimeout(() => {
           if (!cancelado) setSaliendo(true);
         }, 350);
@@ -98,10 +109,31 @@ export default function Page() {
     };
   }, [fotoSrc, estampillaSrc, fondoSrc]);
 
+  // Avance "de mentira" pero creíble: mientras falten recursos, la barra sube
+  // sola poquito a poquito hasta un techo del 95%, para que nunca quede clavada.
+  // El 100% solo se alcanza cuando termina la carga real.
+  useEffect(() => {
+    if (!cargando) return;
+    const id = window.setInterval(() => {
+      if (listoRef.current) return;
+      setProgreso((prev) => {
+        if (prev >= 95) return 95;
+        const piso = progresoRealRef.current;
+        // Se acerca al 95% con pasos que se achican gradualmente
+        const paso = Math.max(1, Math.round((95 - prev) / 20));
+        const siguiente = Math.min(95, prev + paso);
+        // Nunca por debajo del progreso real ya alcanzado
+        return Math.max(siguiente, piso, prev);
+      });
+    }, 240);
+    return () => window.clearInterval(id);
+  }, [cargando]);
+
   // Red de seguridad: nunca dejar la pantalla de carga más de 12s
   useEffect(() => {
     if (!cargando) return;
     const seguridad = window.setTimeout(() => {
+      listoRef.current = true;
       setProgreso(100);
       setSaliendo(true);
       setCargando(false);

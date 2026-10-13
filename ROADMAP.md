@@ -38,6 +38,7 @@
 - [x] Micro-sacudida del sobre cerrado para reforzar la llamada a la acción.
 - [x] Focus trap en el lightbox para contener el foco con teclado.
 - [x] Pantalla de carga con barra de progreso que precarga foto, estampilla, fondo y audio, y avanza sola al completar (con red de seguridad de 12s).
+- [x] Progreso combinado: piso real (recursos cargados) + avance automático creíble hasta 95%; salta a 100% solo cuando todo termina (evita quedar clavado en 75%).
 - [x] Uso de `foto.webp` (322 KB) en vez de `foto.jpg` (657 KB) en la experiencia del cliente.
 - [x] Texto de carga simple con puntos suspensivos animados ("Cargando · Cargando. · Cargando.. · Cargando...") y barra de progreso (se descartaron las frases rotativas a pedido).
 
