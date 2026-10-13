@@ -8,16 +8,17 @@ import { getAssetPath } from './basePath';
 import { generarTarjeta } from './shareCard';
 import { reproducirWhoosh } from './sfx';
 
-// Frases que rotan mientras se carga, con onda de detectives
+// Frases que rotan mientras se carga. El caso ya está resuelto, así que el tono
+// es de celebración: preparamos la sorpresa para las familias.
 const FRASES_CARGA = [
-  'Preparando el caso… 🕵️',
-  'Revisando las huellas dactilares… 🖐️',
-  'Ajustando la lupa… 🔎',
-  'Reuniendo las pistas del 5.º B… 📁',
-  'Descifrando el código secreto… 🔐',
-  'Consultando el expediente… 📝',
-  'Revelando la foto del grupo… 📸',
-  '¡Casi listo, detectives! 🎉',
+  'Preparando la sorpresa… 🎁',
+  'Encendiendo las luces de la fiesta… 💡',
+  'Colgando los globos… 🎈',
+  'Sacando la foto del equipo… 📸',
+  'Afinando la música de fondo… 🎵',
+  'Repartiendo medallas a los detectives… 🏅',
+  'Guardando las lupas, ¡caso resuelto! 🕵️',
+  '¡Casi listo para celebrar! 🥳',
 ];
 
 export default function Page() {
@@ -381,7 +382,7 @@ export default function Page() {
           className={`loading-screen ${saliendo ? 'is-hiding' : ''}`}
           role="status"
           aria-live="polite"
-          aria-label="Preparando el caso"
+          aria-label="Preparando la celebración"
         >
           <div className="loading-inner">
             <span className="loading-stamp" aria-hidden="true">
