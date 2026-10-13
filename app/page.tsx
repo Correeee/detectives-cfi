@@ -6,7 +6,7 @@ import Lightbox from '../components/Lightbox';
 import Confetti from '../components/Confetti';
 import { getAssetPath } from './basePath';
 import { generarTarjeta } from './shareCard';
-import { reproducirAplausos, reproducirWhoosh } from './sfx';
+import { reproducirWhoosh } from './sfx';
 
 export default function Page() {
   const [abierto, setAbierto] = useState(false);
@@ -24,7 +24,6 @@ export default function Page() {
   // "Compartir" el archivo ya esté listo (sin perder el gesto del usuario).
   const tarjetaRef = useRef<Blob | null>(null);
   const tarjetaPromesaRef = useRef<Promise<Blob> | null>(null);
-  const aplausosRef = useRef(false);
 
   const fotoSrc = getAssetPath('/foto.jpg');
   const estampillaSrc = getAssetPath('/estampilla.png');
@@ -245,13 +244,6 @@ export default function Page() {
 
     return () => window.clearTimeout(id);
   }, [abierto, obtenerBlobTarjeta]);
-
-  // Aplausos de celebración al aparecer el modal (una sola vez por sesión)
-  useEffect(() => {
-    if (!ampliada || aplausosRef.current) return;
-    aplausosRef.current = true;
-    reproducirAplausos();
-  }, [ampliada]);
 
   useEffect(() => {
     return () => {

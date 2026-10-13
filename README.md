@@ -9,7 +9,6 @@ Experiencia web interactiva de felicitación para las familias de los detectives
 - **Tarjeta de celebración** con mensaje para las familias (tipografía *Fredoka*).
 - **Música de fondo** (`background.mp3`) con control flotante para pausar/reanudar.
 - **Efecto de sonido de apertura** ("whoosh" sintetizado con Web Audio API, sin archivos extra).
-- **Aplausos de celebración** al aparecer el modal (también sintetizados con Web Audio API).
 - **Vibración** (feedback háptico) al abrir el sobre en dispositivos compatibles.
 - **Sello "RESUELTO"** que cae en diagonal sobre la foto en el modal.
 - **Micro-sacudida** del sobre cerrado para invitar a tocarlo.

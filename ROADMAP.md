@@ -33,9 +33,8 @@
 - [x] Imagen OpenGraph generada en runtime (`app/opengraph-image.tsx`, 1200x630) para una preview atractiva al compartir por WhatsApp.
 - [x] Aviso flotante (toast) accesible para dar feedback de las acciones de compartir.
 - [x] Feedback háptico (vibración) al abrir el sobre en dispositivos compatibles.
-- [x] Aplausos de celebración sintetizados con Web Audio API al aparecer el modal.
 - [x] Sello "RESUELTO" animado que cae sobre la foto en el modal.
 - [x] Micro-sacudida del sobre cerrado para reforzar la llamada a la acción.
 - [x] Focus trap en el lightbox para contener el foco con teclado.
 
-*Última actualización: 13 de Octubre de 2026 (Pulido sensorial: vibración, aplausos, sello RESUELTO, micro-shake del sobre y focus trap del modal)*
+*Última actualización: 13 de Octubre de 2026 (Pulido sensorial: vibración, sello RESUELTO, micro-shake del sobre y focus trap del modal)*
