@@ -8,19 +8,6 @@ import { getAssetPath } from './basePath';
 import { generarTarjeta } from './shareCard';
 import { reproducirWhoosh } from './sfx';
 
-// Frases que rotan mientras se carga. El caso ya está resuelto, así que el tono
-// es de celebración: preparamos la sorpresa para las familias.
-const FRASES_CARGA = [
-  'Preparando la sorpresa… 🎁',
-  'Encendiendo las luces de la fiesta… 💡',
-  'Colgando los globos… 🎈',
-  'Sacando la foto del equipo… 📸',
-  'Afinando la música de fondo… 🎵',
-  'Repartiendo medallas a los detectives… 🏅',
-  'Guardando las lupas, ¡caso resuelto! 🕵️',
-  '¡Casi listo para celebrar! 🥳',
-];
-
 export default function Page() {
   const [abierto, setAbierto] = useState(false);
   const [ampliada, setAmpliada] = useState(false);
@@ -32,7 +19,6 @@ export default function Page() {
   const [cargando, setCargando] = useState(true);
   const [saliendo, setSaliendo] = useState(false);
   const [progreso, setProgreso] = useState(0);
-  const [fraseIdx, setFraseIdx] = useState(0);
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const stageRef = useRef<HTMLElement | null>(null);
@@ -119,15 +105,6 @@ export default function Page() {
       setCargando(false);
     }, 12000);
     return () => window.clearTimeout(seguridad);
-  }, [cargando]);
-
-  // Rota las frases mientras la pantalla de carga está visible
-  useEffect(() => {
-    if (!cargando) return;
-    const intervalo = window.setInterval(() => {
-      setFraseIdx((i) => (i + 1) % FRASES_CARGA.length);
-    }, 1600);
-    return () => window.clearInterval(intervalo);
   }, [cargando]);
 
   const iniciarAudio = useCallback(() => {
@@ -382,15 +359,13 @@ export default function Page() {
           className={`loading-screen ${saliendo ? 'is-hiding' : ''}`}
           role="status"
           aria-live="polite"
-          aria-label="Preparando la celebración"
+          aria-label="Cargando"
         >
           <div className="loading-inner">
             <span className="loading-stamp" aria-hidden="true">
               🔎
             </span>
-            <p className="loading-title" key={fraseIdx}>
-              {FRASES_CARGA[fraseIdx]}
-            </p>
+            <p className="loading-title">Cargando…</p>
             <div className="loading-bar" aria-hidden="true">
               <div className="loading-bar-fill" style={{ width: `${progreso}%` }} />
             </div>

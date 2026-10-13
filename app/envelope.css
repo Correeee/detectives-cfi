@@ -175,7 +175,7 @@ body {
   color: var(--ink);
   letter-spacing: 0.5px;
   min-height: 1.4em;
-  /* Cada frase entra con un fundido suave (se remonta con key={fraseIdx}) */
+  /* El texto entra con un fundido suave */
   animation: phrase-in 0.45s ease both;
 }
 
