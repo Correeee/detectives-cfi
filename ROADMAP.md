@@ -20,6 +20,7 @@
 - [x] Música de fondo interactiva (`background.mp3`) con control flotante para pausar/reanudar.
 - [x] Logo del colegio en cabecera de la página, en el informe de detectives y favicon de pestaña.
 - [x] Optimización SEO completa: Open Graph, Twitter Cards, Schema.org estructurado, metadatos descriptivos y tags semánticos.
+- [x] Fondo temático de detectives (`background.webp`) aplicado como patrón repetido de toda la app, con velo cálido radial y ajuste para iOS/Safari.
 - [x] Configuración optimizada para Vercel: rutas nativas en la raíz (`/`), metadatos hacia `detectives-cfi.vercel.app` y eliminación del prefijo de subdirectorio.
 
 *Última actualización: 12 de Octubre de 2026 (Adaptación y corrección completa para despliegue en Vercel)*
