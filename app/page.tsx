@@ -19,7 +19,6 @@ export default function Page() {
   const [cargando, setCargando] = useState(true);
   const [saliendo, setSaliendo] = useState(false);
   const [progreso, setProgreso] = useState(0);
-  const [listo, setListo] = useState(false);
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const stageRef = useRef<HTMLElement | null>(null);
@@ -45,7 +44,16 @@ export default function Page() {
       if (cancelado) return;
       cargados += 1;
       setProgreso(Math.round((cargados / total) * 100));
-      if (cargados >= total) setListo(true);
+
+      // Al completar, la pantalla se cierra sola y da paso a la experiencia
+      if (cargados >= total) {
+        window.setTimeout(() => {
+          if (!cancelado) setSaliendo(true);
+        }, 350);
+        window.setTimeout(() => {
+          if (!cancelado) setCargando(false);
+        }, 800);
+      }
     };
 
     imagenes.forEach((src) => {
@@ -93,16 +101,11 @@ export default function Page() {
     if (!cargando) return;
     const seguridad = window.setTimeout(() => {
       setProgreso(100);
-      setListo(true);
+      setSaliendo(true);
+      setCargando(false);
     }, 12000);
     return () => window.clearTimeout(seguridad);
   }, [cargando]);
-
-  // El usuario toca "Comenzar": se desvanece la pantalla y arranca la experiencia
-  const entrar = useCallback(() => {
-    setSaliendo(true);
-    window.setTimeout(() => setCargando(false), 450);
-  }, []);
 
   const iniciarAudio = useCallback(() => {
     const audio = audioRef.current;
@@ -362,19 +365,11 @@ export default function Page() {
             <span className="loading-stamp" aria-hidden="true">
               🔎
             </span>
-            <p className="loading-title">
-              {listo ? '¡Todo listo!' : 'Preparando el caso…'}
-            </p>
+            <p className="loading-title">Preparando el caso…</p>
             <div className="loading-bar" aria-hidden="true">
               <div className="loading-bar-fill" style={{ width: `${progreso}%` }} />
             </div>
-            {listo ? (
-              <button type="button" className="loading-enter" onClick={entrar}>
-                🔎 Comenzar
-              </button>
-            ) : (
-              <p className="loading-percent">{progreso}%</p>
-            )}
+            <p className="loading-percent">{progreso}%</p>
           </div>
         </div>
       )}

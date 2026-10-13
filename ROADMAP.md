@@ -37,7 +37,7 @@
 - [x] Sello "RESUELTO" animado que cae sobre la foto en el modal.
 - [x] Micro-sacudida del sobre cerrado para reforzar la llamada a la acción.
 - [x] Focus trap en el lightbox para contener el foco con teclado.
-- [x] Pantalla de carga con barra de progreso que precarga foto, estampilla, fondo y audio, y habilita el ingreso con botón "Comenzar" al completar (con red de seguridad de 12s).
+- [x] Pantalla de carga con barra de progreso que precarga foto, estampilla, fondo y audio, y avanza sola al completar (con red de seguridad de 12s).
 - [x] Uso de `foto.webp` (322 KB) en vez de `foto.jpg` (657 KB) en la experiencia del cliente.
 
 *Última actualización: 13 de Octubre de 2026 (Pantalla de carga que precarga todo y da paso con botón "Comenzar", y foto principal en WebP)*
